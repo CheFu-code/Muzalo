@@ -37,7 +37,7 @@ export async function generateMetadata({
 
   return {
     title: result.song.title,
-    description: `${result.song.title} by ${result.artist.name} on SoundWave.`,
+    description: `${result.song.title} by ${result.artist.name} on Muzalo.`,
   };
 }
 

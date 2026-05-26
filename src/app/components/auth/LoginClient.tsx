@@ -132,7 +132,7 @@ export function LoginClient() {
               <Music className="h-7 w-7" />
             </div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-purple-300">
-              SoundWave
+              Muzalo
             </p>
           </div>
           <h1 className="text-5xl font-semibold leading-tight">
@@ -148,7 +148,7 @@ export function LoginClient() {
           <div className="mb-6">
             <h2 className="text-2xl font-semibold">Welcome back</h2>
             <p className="mt-2 text-sm text-gray-400">
-              Continue to SoundWave with your CheFu account.
+              Continue to Muzalo with your CheFu account.
             </p>
           </div>
 
@@ -209,7 +209,7 @@ export function LoginClient() {
                 value={email}
                 onChange={event => setEmail(event.currentTarget.value)}
                 autoComplete="email"
-                placeholder="you@chefuinc.com"
+                placeholder="you@example.com"
                 className="w-full rounded-lg border border-gray-700 bg-gray-950/70 px-4 py-3 text-white placeholder:text-gray-500 focus:border-purple-500 focus:outline-none"
               />
             </div>

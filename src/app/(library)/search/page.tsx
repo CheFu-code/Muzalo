@@ -3,7 +3,7 @@ import { SearchPage } from '../../components/SearchPage';
 
 export const metadata: Metadata = {
   title: 'Search',
-  description: 'Search your private SoundWave music library.',
+  description: 'Search your private Muzalo music library.',
 };
 
 export default function SearchRoute() {

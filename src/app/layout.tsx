@@ -4,8 +4,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'SoundWave',
-    template: '%s | SoundWave',
+    default: 'Muzalo',
+    template: '%s | Muzalo',
   },
   description: 'A private music library for artists, playlists, and songs.',
 };

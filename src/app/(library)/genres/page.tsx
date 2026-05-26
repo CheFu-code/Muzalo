@@ -3,7 +3,7 @@ import { GenresPage } from '../../components/GenresPage';
 
 export const metadata: Metadata = {
   title: 'Genres',
-  description: 'Browse SoundWave music by genre.',
+  description: 'Browse Muzalo music by genre.',
 };
 
 export default function GenresRoute() {

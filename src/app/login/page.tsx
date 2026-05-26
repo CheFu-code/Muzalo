@@ -12,7 +12,7 @@ type LoginPageProps = {
 
 export const metadata: Metadata = {
   title: 'Sign in',
-  description: 'Sign in to SoundWave.',
+  description: 'Sign in to Muzalo.',
 };
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {

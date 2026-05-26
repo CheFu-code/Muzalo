@@ -21,7 +21,7 @@ export function MusicShell({ children, user }: MusicShellProps) {
             <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
               <Music className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-2xl font-semibold text-white">SoundWave</h1>
+            <h1 className="text-2xl font-semibold text-white">Muzalo</h1>
           </Link>
         </div>
 
@@ -36,7 +36,7 @@ export function MusicShell({ children, user }: MusicShellProps) {
           </div>
           <SignOutButton />
           <div className="text-xs text-gray-500">
-            <p>(c) 2026 SoundWave</p>
+            <p>(c) 2026 Muzalo</p>
             <p className="mt-1">Your personal music library</p>
           </div>
         </div>

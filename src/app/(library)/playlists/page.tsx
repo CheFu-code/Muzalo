@@ -3,7 +3,7 @@ import { PlaylistsPage } from '../../components/PlaylistsPage';
 
 export const metadata: Metadata = {
   title: 'Playlists',
-  description: 'Curated SoundWave playlists for every mood.',
+  description: 'Curated Muzalo playlists for every mood.',
 };
 
 export default function PlaylistsRoute() {
