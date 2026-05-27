@@ -2,13 +2,12 @@
 
 import { LogOut } from 'lucide-react';
 import { signOut } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { apiUrl } from '@/lib/api';
+import { buildChefuAccountLogoutUrl } from '@/lib/chefu-account';
 import { getFirebaseAuth } from '@/lib/firebase';
 
 export function SignOutButton() {
-  const router = useRouter();
   const [pending, setPending] = useState(false);
 
   const handleSignOut = async () => {
@@ -26,8 +25,9 @@ export function SignOutButton() {
         // The backend session is the source of truth for protected SSR routes.
       }
 
-      router.replace('/login');
-      router.refresh();
+      window.location.assign(
+        buildChefuAccountLogoutUrl(`${window.location.origin}/login`),
+      );
     } finally {
       setPending(false);
     }

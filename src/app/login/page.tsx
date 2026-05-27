@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { Suspense } from 'react';
-import { LoginClient } from '../components/auth/LoginClient';
+import {
+  buildChefuAccountLoginUrl,
+  currentRequestOrigin,
+  safeNextPath,
+} from '@/lib/chefu-account';
 import { getCurrentUser } from '@/lib/server-session';
 
 type LoginPageProps = {
@@ -12,20 +15,23 @@ type LoginPageProps = {
 
 export const metadata: Metadata = {
   title: 'Sign in',
-  description: 'Sign in to Muzalo.',
+  description: 'Sign in to Muzalo with your CheFu Account.',
 };
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const user = await getCurrentUser();
   const { next } = await searchParams;
+  const nextPath = safeNextPath(next);
+  const user = await getCurrentUser();
 
   if (user) {
-    redirect(next?.startsWith('/') ? next : '/');
+    redirect(nextPath);
   }
 
-  return (
-    <Suspense fallback={null}>
-      <LoginClient />
-    </Suspense>
+  const origin = await currentRequestOrigin();
+  redirect(
+    buildChefuAccountLoginUrl({
+      app: 'muzalo',
+      returnTo: new URL(nextPath, origin).toString(),
+    }),
   );
 }
