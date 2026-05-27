@@ -65,11 +65,40 @@ type SpotifyTrack = {
   album?: SpotifyAlbum;
 };
 
+export type SpotifyCatalogIssueCode =
+  | "missing_credentials"
+  | "credentials_rejected"
+  | "artist_not_found"
+  | "spotify_api_error"
+  | "unknown";
+
+export type SpotifyCatalogIssue = {
+  code: SpotifyCatalogIssueCode;
+  title: string;
+  description: string;
+};
+
+class SpotifyCatalogError extends Error {
+  constructor(
+    public readonly code: SpotifyCatalogIssueCode,
+    message: string,
+    public readonly status?: number,
+  ) {
+    super(message);
+    this.name = "SpotifyCatalogError";
+  }
+}
+
 let tokenCache: { accessToken: string; expiresAt: number } | null = null;
 
 export async function getMusicLibrary(): Promise<Artist[]> {
   const artist = await getCheFuArtist();
-  if (!artist) return [];
+  if (!artist) {
+    throw new SpotifyCatalogError(
+      "artist_not_found",
+      "Spotify could not find the configured CheFu artist.",
+    );
+  }
 
   const albums = await getArtistAlbums(artist.id);
   const songs = await getAlbumSongs(albums);
@@ -191,6 +220,52 @@ export async function getPlaylistSongs(
   return songs.filter((item): item is { artist: Artist; song: Song } => Boolean(item));
 }
 
+export function getSpotifyCatalogIssue(error: unknown): SpotifyCatalogIssue {
+  if (error instanceof SpotifyCatalogError) {
+    if (error.code === "missing_credentials") {
+      return {
+        code: error.code,
+        title: "Spotify credentials are not loaded",
+        description:
+          "Set SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, and SPOTIFY_CHEFU_ARTIST_ID on the Muzalo deployment, then redeploy the app.",
+      };
+    }
+
+    if (error.code === "credentials_rejected") {
+      return {
+        code: error.code,
+        title: "Spotify rejected the app credentials",
+        description:
+          "Check that the Client ID and Client Secret were copied from the same Spotify app, then redeploy Muzalo.",
+      };
+    }
+
+    if (error.code === "artist_not_found") {
+      return {
+        code: error.code,
+        title: "Spotify artist was not found",
+        description:
+          "Check SPOTIFY_CHEFU_ARTIST_ID. For the URL you shared, the artist ID should be 07fFH9mxSS0g69Wbz8PXNn.",
+      };
+    }
+
+    return {
+      code: error.code,
+      title: "Spotify catalog request failed",
+      description: error.status
+        ? `Spotify returned status ${error.status}. Check the Muzalo server logs for the request details.`
+        : "Spotify did not return the catalog. Check the Muzalo server logs for the request details.",
+    };
+  }
+
+  return {
+    code: "unknown",
+    title: "Spotify catalog unavailable",
+    description:
+      "Muzalo could not load the Spotify catalog. Check the deployment environment variables and server logs.",
+  };
+}
+
 async function getCheFuArtist() {
   const artistId = process.env.SPOTIFY_CHEFU_ARTIST_ID;
   const artistName = process.env.SPOTIFY_CHEFU_ARTIST_NAME || "CheFu";
@@ -270,7 +345,20 @@ async function spotifyFetch<T>(path: string): Promise<T> {
   });
 
   if (!response.ok) {
-    throw new Error(`Spotify request failed with status ${response.status}.`);
+    const body = await response.text().catch(() => "");
+    console.warn(
+      JSON.stringify({
+        event: "spotify_catalog_request_failed",
+        status: response.status,
+        path,
+        body: body.slice(0, 500),
+      }),
+    );
+    throw new SpotifyCatalogError(
+      "spotify_api_error",
+      `Spotify request failed with status ${response.status}.`,
+      response.status,
+    );
   }
 
   return response.json() as Promise<T>;
@@ -285,7 +373,7 @@ async function getSpotifyAccessToken() {
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
   if (!clientId || !clientSecret) {
-    throw new Error("Missing Spotify credentials.");
+    throw new SpotifyCatalogError("missing_credentials", "Missing Spotify credentials.");
   }
 
   const response = await fetch("https://accounts.spotify.com/api/token", {
@@ -299,7 +387,21 @@ async function getSpotifyAccessToken() {
   });
 
   if (!response.ok) {
-    throw new Error("Unable to authenticate with Spotify.");
+    const body = await response.text().catch(() => "");
+    console.warn(
+      JSON.stringify({
+        event: "spotify_token_request_failed",
+        status: response.status,
+        body: body.slice(0, 500),
+      }),
+    );
+    throw new SpotifyCatalogError(
+      response.status === 400 || response.status === 401
+        ? "credentials_rejected"
+        : "spotify_api_error",
+      "Unable to authenticate with Spotify.",
+      response.status,
+    );
   }
 
   const data = (await response.json()) as {

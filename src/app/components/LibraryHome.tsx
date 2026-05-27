@@ -1,10 +1,26 @@
 import Link from "next/link";
-import { getMusicLibrary, formatArtistUrl, getPlaylists, getSongById, formatSongUrl } from "../data/musicData";
-import { Play, Music2, TrendingUp, Clock } from "lucide-react";
+import {
+  getMusicLibrary,
+  formatArtistUrl,
+  getPlaylists,
+  getSongById,
+  formatSongUrl,
+  getSpotifyCatalogIssue,
+  type Artist,
+} from "../data/musicData";
+import { AlertTriangle, Clock, Music2, Play, TrendingUp } from "lucide-react";
 
 export async function LibraryHome() {
-  const musicLibrary = await getMusicLibrary().catch(() => []);
-  const playlists = await getPlaylists().catch(() => []);
+  let catalogIssue: ReturnType<typeof getSpotifyCatalogIssue> | null = null;
+  let musicLibrary: Artist[] = [];
+
+  try {
+    musicLibrary = await getMusicLibrary();
+  } catch (error) {
+    catalogIssue = getSpotifyCatalogIssue(error);
+  }
+
+  const playlists = catalogIssue ? [] : await getPlaylists().catch(() => []);
   const recentlyPlayed = (
     await Promise.all(musicLibrary.flatMap((artist) => artist.songs.slice(0, 5).map((song) => getSongById(song.id))))
   ).filter(Boolean) as Array<{ artist: any; song: any }>;
@@ -13,11 +29,29 @@ export async function LibraryHome() {
 
   if (!musicLibrary.length) {
     return (
-      <div className="mx-auto max-w-3xl px-6 py-20 text-center">
-        <h2 className="text-3xl font-semibold text-white">Spotify catalog unavailable</h2>
-        <p className="mt-3 text-gray-400">
-          Add Spotify credentials and a CheFu artist ID to load real music here.
-        </p>
+      <div className="mx-auto max-w-3xl px-6 py-20">
+        <div className="rounded-3xl border border-amber-400/30 bg-amber-400/10 p-8 text-center shadow-2xl shadow-black/20">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-300 text-amber-950">
+            <AlertTriangle className="h-7 w-7" />
+          </div>
+          <h2 className="mt-5 text-3xl font-semibold text-white">
+            {catalogIssue?.title || "Spotify catalog unavailable"}
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-gray-300">
+            {catalogIssue?.description ||
+              "Muzalo could not load the Spotify catalog. Check the Spotify settings on the Muzalo deployment."}
+          </p>
+          <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4 text-left text-sm text-gray-300">
+            <p className="font-medium text-white">Expected production values</p>
+            <pre className="mt-3 overflow-x-auto text-xs leading-6 text-gray-300">
+{`SPOTIFY_CLIENT_ID=...
+SPOTIFY_CLIENT_SECRET=...
+SPOTIFY_CHEFU_ARTIST_ID=07fFH9mxSS0g69Wbz8PXNn
+SPOTIFY_CHEFU_ARTIST_NAME=CheFu
+SPOTIFY_MARKET=ZA`}
+            </pre>
+          </div>
+        </div>
       </div>
     );
   }
