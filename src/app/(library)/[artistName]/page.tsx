@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { ArtistPage } from '../../components/ArtistPage';
-import { formatArtistUrl, getArtistByName, musicLibrary } from '../../data/musicData';
+import { formatArtistUrl, getArtistByName, getMusicLibrary } from '../../data/musicData';
 
 type ArtistRouteProps = {
   params: Promise<{
@@ -8,7 +8,8 @@ type ArtistRouteProps = {
   }>;
 };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const musicLibrary = await getMusicLibrary().catch(() => []);
   return musicLibrary.map(artist => ({
     artistName: formatArtistUrl(artist.name),
   }));
@@ -18,7 +19,7 @@ export async function generateMetadata({
   params,
 }: ArtistRouteProps): Promise<Metadata> {
   const { artistName } = await params;
-  const artist = getArtistByName(artistName);
+  const artist = await getArtistByName(artistName).catch(() => null);
 
   if (!artist) {
     return {

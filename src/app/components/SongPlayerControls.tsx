@@ -1,25 +1,61 @@
 'use client';
 
-import { Heart, Pause, Play, SkipBack, SkipForward, Volume2 } from 'lucide-react';
-import { useState } from 'react';
+import { ExternalLink, Heart, Pause, Play, Volume2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 type SongPlayerControlsProps = {
   duration: string;
+  previewUrl: string | null;
+  spotifyUrl: string;
 };
 
-export function SongPlayerControls({ duration }: SongPlayerControlsProps) {
+export function SongPlayerControls({ duration, previewUrl, spotifyUrl }: SongPlayerControlsProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [volume, setVolume] = useState(70);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100;
+    }
+  }, [volume]);
+
+  async function togglePlayback() {
+    if (!previewUrl) {
+      window.open(spotifyUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    await audio.play();
+    setIsPlaying(true);
+  }
 
   return (
     <div className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-xl rounded-2xl border border-gray-700/50 p-8">
+      {previewUrl ? (
+        <audio
+          ref={audioRef}
+          src={previewUrl}
+          onEnded={() => setIsPlaying(false)}
+          preload="none"
+        />
+      ) : null}
       <div className="flex items-center gap-4 mb-8">
         <button
           type="button"
-          onClick={() => setIsPlaying(!isPlaying)}
+          onClick={togglePlayback}
           className="w-16 h-16 bg-purple-600 hover:bg-purple-700 rounded-full flex items-center justify-center transition-all hover:scale-105 shadow-lg"
-          aria-label={isPlaying ? 'Pause' : 'Play'}
+          aria-label={previewUrl ? (isPlaying ? 'Pause preview' : 'Play preview') : 'Open on Spotify'}
         >
           {isPlaying ? (
             <Pause className="w-8 h-8 text-white" fill="white" />
@@ -27,6 +63,17 @@ export function SongPlayerControls({ duration }: SongPlayerControlsProps) {
             <Play className="w-8 h-8 text-white ml-1" fill="white" />
           )}
         </button>
+        {spotifyUrl ? (
+          <a
+            href={spotifyUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex h-12 items-center gap-2 rounded-full border border-gray-700/80 px-4 text-sm font-semibold text-gray-200 transition hover:border-purple-500/70 hover:text-white"
+          >
+            <ExternalLink className="h-4 w-4" />
+            Spotify
+          </a>
+        ) : null}
         <button
           type="button"
           onClick={() => setIsLiked(!isLiked)}
@@ -55,20 +102,9 @@ export function SongPlayerControls({ duration }: SongPlayerControlsProps) {
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <button
-            type="button"
-            className="text-gray-400 hover:text-white transition-colors"
-            aria-label="Previous song"
-          >
-            <SkipBack className="w-6 h-6" />
-          </button>
-          <button
-            type="button"
-            className="text-gray-400 hover:text-white transition-colors"
-            aria-label="Next song"
-          >
-            <SkipForward className="w-6 h-6" />
-          </button>
+          <p className="text-sm text-gray-400">
+            {previewUrl ? 'Preview audio provided by Spotify.' : 'Preview unavailable. Open the full track on Spotify.'}
+          </p>
         </div>
 
         <div className="flex items-center gap-3">

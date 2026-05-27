@@ -1,5 +1,5 @@
 const CHEFU_ACCOUNT_URL =
-  process.env.NEXT_PUBLIC_CHEFU_ACCOUNT_URL || 'https://chefuinc.com';
+  process.env.NEXT_PUBLIC_CHEFU_ACCOUNT_URL || 'https://myaccount.chefuinc.com';
 
 export function buildChefuAccountLoginUrl({
   app,

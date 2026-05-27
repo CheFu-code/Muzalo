@@ -3,8 +3,8 @@ import { SongPage } from '../../../components/SongPage';
 import {
   formatArtistUrl,
   formatSongUrl,
+  getMusicLibrary,
   getSongByName,
-  musicLibrary,
 } from '../../../data/musicData';
 
 type SongRouteProps = {
@@ -14,7 +14,8 @@ type SongRouteProps = {
   }>;
 };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const musicLibrary = await getMusicLibrary().catch(() => []);
   return musicLibrary.flatMap(artist =>
     artist.songs.map(song => ({
       artistName: formatArtistUrl(artist.name),
@@ -27,7 +28,7 @@ export async function generateMetadata({
   params,
 }: SongRouteProps): Promise<Metadata> {
   const { artistName, songName } = await params;
-  const result = getSongByName(artistName, songName);
+  const result = await getSongByName(artistName, songName).catch(() => null);
 
   if (!result) {
     return {

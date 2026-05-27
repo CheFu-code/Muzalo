@@ -2,20 +2,33 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { searchMusic, formatArtistUrl, formatSongUrl } from "../data/musicData";
+import { formatArtistUrl, formatSongUrl } from "../data/format";
 import { Search, Music2, User } from "lucide-react";
+
+type SearchResults = {
+  artists: Array<{ id: string; name: string; genre: string; image: string }>;
+  songs: Array<{
+    artist: { id: string; name: string; image: string };
+    song: { id: string; title: string; duration: string };
+  }>;
+};
 
 export function SearchPage() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<ReturnType<typeof searchMusic> | null>(null);
+  const [results, setResults] = useState<SearchResults | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleSearch = (value: string) => {
+  const handleSearch = async (value: string) => {
     setQuery(value);
-    if (value.trim()) {
-      setResults(searchMusic(value));
-    } else {
+    if (!value.trim()) {
       setResults(null);
+      return;
     }
+
+    setIsSearching(true);
+    const response = await fetch(`/api/search?q=${encodeURIComponent(value)}`);
+    setResults((await response.json()) as SearchResults);
+    setIsSearching(false);
   };
 
   return (
@@ -35,7 +48,11 @@ export function SearchPage() {
         </div>
       </div>
 
-      {results && (
+      {isSearching ? (
+        <p className="text-gray-400">Searching Spotify...</p>
+      ) : null}
+
+      {results && !isSearching && (
         <div className="space-y-8">
           {results.artists.length > 0 && (
             <div>

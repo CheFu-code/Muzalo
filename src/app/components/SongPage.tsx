@@ -9,8 +9,8 @@ type SongPageProps = {
   songName: string;
 };
 
-export function SongPage({ artistName, songName }: SongPageProps) {
-  const result = getSongByName(artistName, songName);
+export async function SongPage({ artistName, songName }: SongPageProps) {
+  const result = await getSongByName(artistName, songName);
 
   if (!result) {
     notFound();
@@ -60,7 +60,11 @@ export function SongPage({ artistName, songName }: SongPageProps) {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <SongPlayerControls duration={song.duration} />
+        <SongPlayerControls
+          duration={song.duration}
+          previewUrl={song.previewUrl}
+          spotifyUrl={song.spotifyUrl}
+        />
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-gray-800/40 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6">

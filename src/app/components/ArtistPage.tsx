@@ -7,17 +7,14 @@ type ArtistPageProps = {
   artistName: string;
 };
 
-export function ArtistPage({ artistName }: ArtistPageProps) {
-  const artist = getArtistByName(artistName);
+export async function ArtistPage({ artistName }: ArtistPageProps) {
+  const artist = await getArtistByName(artistName);
 
   if (!artist) {
     notFound();
   }
 
-  const totalDuration = artist.songs.reduce((acc, song) => {
-    const [min, sec] = song.duration.split(':').map(Number);
-    return acc + min * 60 + sec;
-  }, 0);
+  const totalDuration = artist.songs.reduce((acc, song) => acc + song.durationMs / 1000, 0);
 
   const formatTotalTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -64,7 +61,19 @@ export function ArtistPage({ artistName }: ArtistPageProps) {
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="bg-gray-800/40 backdrop-blur-sm rounded-xl border border-gray-700/50 overflow-hidden">
           <div className="p-6 border-b border-gray-700/50">
-            <h2 className="text-2xl font-semibold text-white">Popular Songs</h2>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <h2 className="text-2xl font-semibold text-white">Spotify Songs</h2>
+              {artist.spotifyUrl ? (
+                <a
+                  href={artist.spotifyUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-purple-500/50 px-4 py-2 text-sm font-semibold text-purple-200 transition hover:bg-purple-500/10"
+                >
+                  Open on Spotify
+                </a>
+              ) : null}
+            </div>
           </div>
 
           <div className="divide-y divide-gray-700/50">

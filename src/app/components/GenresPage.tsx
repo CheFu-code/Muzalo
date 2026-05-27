@@ -17,8 +17,8 @@ const genreColors: Record<string, string> = {
   "Alternative Rock": "from-gray-600 to-slate-600",
 };
 
-export function GenresPage() {
-  const genres = getAllGenres();
+export async function GenresPage() {
+  const genres = await getAllGenres().catch(() => []);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
@@ -28,8 +28,8 @@ export function GenresPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {genres.map((genre) => {
-          const artists = getArtistsByGenre(genre);
+        {await Promise.all(genres.map(async (genre) => {
+          const artists = await getArtistsByGenre(genre);
           const gradient = genreColors[genre] || "from-gray-600 to-gray-700";
 
           return (
@@ -72,7 +72,7 @@ export function GenresPage() {
               </div>
             </div>
           );
-        })}
+        }))}
       </div>
     </div>
   );

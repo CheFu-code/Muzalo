@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { playlists, getPlaylistSongs, formatArtistUrl, formatSongUrl } from "../data/musicData";
+import { getPlaylists, getPlaylistSongs, formatArtistUrl, formatSongUrl } from "../data/musicData";
 import { Play, Music2, Clock } from "lucide-react";
 
-export function PlaylistsPage() {
+export async function PlaylistsPage() {
+  const playlists = await getPlaylists().catch(() => []);
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
       <div className="mb-12">
@@ -11,8 +13,8 @@ export function PlaylistsPage() {
       </div>
 
       <div className="space-y-8">
-        {playlists.map((playlist) => {
-          const songs = getPlaylistSongs(playlist);
+        {await Promise.all(playlists.map(async (playlist) => {
+          const songs = await getPlaylistSongs(playlist);
           const totalDuration = songs.reduce((acc, { song }) => {
             const [min, sec] = song.duration.split(":").map(Number);
             return acc + min * 60 + sec;
@@ -100,7 +102,7 @@ export function PlaylistsPage() {
               </div>
             </div>
           );
-        })}
+        }))}
       </div>
     </div>
   );

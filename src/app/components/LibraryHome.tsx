@@ -1,17 +1,26 @@
 import Link from "next/link";
-import { musicLibrary, formatArtistUrl, playlists, getSongById, formatSongUrl } from "../data/musicData";
+import { getMusicLibrary, formatArtistUrl, getPlaylists, getSongById, formatSongUrl } from "../data/musicData";
 import { Play, Music2, TrendingUp, Clock } from "lucide-react";
 
-export function LibraryHome() {
-  const recentlyPlayed = [
-    getSongById("51"),
-    getSongById("21"),
-    getSongById("86"),
-    getSongById("41"),
-    getSongById("16"),
-  ].filter(Boolean) as Array<{ artist: any; song: any }>;
+export async function LibraryHome() {
+  const musicLibrary = await getMusicLibrary().catch(() => []);
+  const playlists = await getPlaylists().catch(() => []);
+  const recentlyPlayed = (
+    await Promise.all(musicLibrary.flatMap((artist) => artist.songs.slice(0, 5).map((song) => getSongById(song.id))))
+  ).filter(Boolean) as Array<{ artist: any; song: any }>;
 
   const recommended = musicLibrary.slice(0, 6);
+
+  if (!musicLibrary.length) {
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-20 text-center">
+        <h2 className="text-3xl font-semibold text-white">Spotify catalog unavailable</h2>
+        <p className="mt-3 text-gray-400">
+          Add Spotify credentials and a CheFu artist ID to load real music here.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
@@ -63,7 +72,7 @@ export function LibraryHome() {
           {playlists.map((playlist) => (
             <Link
               key={playlist.id}
-              href="/playlists"
+              href={`/playlists#${playlist.id}`}
               className="group bg-gray-800/40 rounded-lg p-4 hover:bg-gray-800/60 transition-all"
             >
               <div className="aspect-square rounded-lg overflow-hidden mb-3 relative">
@@ -129,7 +138,7 @@ export function LibraryHome() {
           <h2 className="text-2xl font-semibold text-white">All Artists</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {musicLibrary.map((artist) => (
+        {musicLibrary.map((artist) => (
           <Link
             key={artist.id}
             href={`/${formatArtistUrl(artist.name)}`}

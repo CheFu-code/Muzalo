@@ -1,5 +1,5 @@
 import { LibraryHome } from '../components/LibraryHome';
 
-export default function HomePage() {
+export default async function HomePage() {
   return <LibraryHome />;
 }
