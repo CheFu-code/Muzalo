@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { Music } from 'lucide-react';
+import { Music, UserRound } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { SidebarNav } from './SidebarNav';
 import { SignOutButton } from './auth/SignOutButton';
 import type { AuthUser } from '@/lib/server-session';
+import { buildChefuAccountManageUrl } from '@/lib/chefu-account';
 
 type MusicShellProps = {
   children: ReactNode;
@@ -34,6 +35,13 @@ export function MusicShell({ children, user }: MusicShellProps) {
               <p className="mt-1 text-xs text-gray-500 truncate">{user.email}</p>
             ) : null}
           </div>
+          <a
+            href={buildChefuAccountManageUrl('/')}
+            className="flex items-center justify-center gap-2 rounded-lg border border-gray-800 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-purple-500/60 hover:bg-purple-500/10 hover:text-white"
+          >
+            <UserRound className="h-4 w-4" />
+            Manage account
+          </a>
           <SignOutButton />
           <div className="text-xs text-gray-500">
             <p>(c) 2026 Muzalo</p>

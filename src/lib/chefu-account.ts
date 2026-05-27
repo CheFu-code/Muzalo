@@ -20,6 +20,13 @@ export function buildChefuAccountLogoutUrl(returnTo: string) {
   return url.toString();
 }
 
+export function buildChefuAccountManageUrl(returnTo: string) {
+  const url = new URL('/account', CHEFU_ACCOUNT_URL);
+  url.searchParams.set('app', 'muzalo');
+  url.searchParams.set('returnTo', returnTo);
+  return url.toString();
+}
+
 export async function currentRequestOrigin() {
   const { headers } = await import('next/headers');
   const headerStore = await headers();
