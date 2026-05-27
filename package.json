@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@chefu/ui": "github:CheFu-code/CheFu-UI#main",
+    "@chefu/ui": "git+https://github.com/CheFu-code/CheFu-UI.git#main",
     "firebase": "^12.13.0",
     "lucide-react": "0.487.0",
     "next": "16.2.6",
