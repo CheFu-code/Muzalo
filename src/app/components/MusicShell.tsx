@@ -47,7 +47,6 @@ export function MusicShell({ children, user }: MusicShellProps) {
           <SignOutButton />
           <div className="text-xs text-gray-500">
             <p>(c) 2026 Muzalo</p>
-            <p className="mt-1">Your personal music library</p>
           </div>
         </div>
       </aside>
