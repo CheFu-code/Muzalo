@@ -1,11 +1,11 @@
 'use client';
 
+import { CheFuUserDropdown } from '@chefu/ui';
 import Link from 'next/link';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { useState, type ReactNode } from 'react';
 import { SidebarNav } from './SidebarNav';
-import { UserDropdown } from './UserDropdown';
 import type { AuthUser } from '@/lib/server-session';
 import { apiUrl } from '@/lib/api';
 import { buildChefuAccountLogoutUrl } from '@/lib/chefu-account';
@@ -99,12 +99,18 @@ export function MusicShellClient({ children, manageAccountUrl, user }: MusicShel
               {(user.name || user.email || 'M').slice(0, 1).toUpperCase()}
             </button>
           ) : (
-            <UserDropdown
-              email={user.email}
-              manageAccountUrl={manageAccountUrl}
-              name={user.name}
+            <CheFuUserDropdown
+              accountHref={manageAccountUrl}
+              align="left"
+              menuPlacement="top"
               onSignOut={handleSignOut}
               pendingSignOut={pendingSignOut}
+              triggerClassName="w-full justify-between rounded-2xl border-gray-800 bg-gray-900/60"
+              user={{
+                displayName: user.name,
+                email: user.email,
+              }}
+              variant="purple"
             />
           )}
           {!collapsed ? (
