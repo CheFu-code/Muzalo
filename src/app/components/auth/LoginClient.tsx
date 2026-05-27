@@ -8,7 +8,7 @@ import {
   signInWithPopup,
   type Auth,
 } from 'firebase/auth';
-import { AlertCircle, CheckCircle2, Loader2, Music } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState, useTransition } from 'react';
@@ -128,9 +128,7 @@ export function LoginClient() {
       <section className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-6xl items-center justify-center gap-12">
         <div className="hidden max-w-xl lg:block">
           <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-pink-600">
-              <Music className="h-7 w-7" />
-            </div>
+            <img src="/muzalo-logo.svg" alt="" className="h-12 w-12 rounded-lg" />
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-purple-300">
               Muzalo
             </p>

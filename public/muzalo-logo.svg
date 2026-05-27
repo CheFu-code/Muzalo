@@ -1,0 +1,37 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="muzalo-title muzalo-desc">
+  <title id="muzalo-title">Muzalo logo</title>
+  <desc id="muzalo-desc">A stylized music mark with a vinyl groove, waveform, and the letter M.</desc>
+  <defs>
+    <linearGradient id="muzalo-bg" x1="77" y1="57" x2="437" y2="454" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7C3AED"/>
+      <stop offset="0.48" stop-color="#D946EF"/>
+      <stop offset="1" stop-color="#FB7185"/>
+    </linearGradient>
+    <linearGradient id="muzalo-glow" x1="130" y1="100" x2="393" y2="407" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5D0FE" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#FDE68A" stop-opacity="0.72"/>
+    </linearGradient>
+    <filter id="shadow" x="40" y="42" width="432" height="432" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="18"/>
+      <feGaussianBlur stdDeviation="23"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.13 0 0 0 0 0.03 0 0 0 0 0.23 0 0 0 0.34 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="74" y="66" width="364" height="364" rx="96" fill="#111827"/>
+    <rect x="74" y="66" width="364" height="364" rx="96" fill="url(#muzalo-bg)" fill-opacity="0.94"/>
+    <rect x="91" y="83" width="330" height="330" rx="82" stroke="white" stroke-opacity="0.14" stroke-width="2"/>
+  </g>
+  <circle cx="256" cy="248" r="126" fill="#0B1020" fill-opacity="0.52"/>
+  <circle cx="256" cy="248" r="92" stroke="white" stroke-opacity="0.12" stroke-width="10"/>
+  <circle cx="256" cy="248" r="52" stroke="white" stroke-opacity="0.15" stroke-width="8"/>
+  <circle cx="256" cy="248" r="18" fill="#F8FAFC"/>
+  <path d="M154 302C177 279 189 245 189 195V171C189 160 198 151 209 151H219C227 151 234 156 238 163L256 199L274 163C278 156 285 151 293 151H303C314 151 323 160 323 171V302H289V207L267 251C263 258 259 261 256 261C253 261 249 258 245 251L223 207C223 252 208 288 179 318L154 302Z" fill="white"/>
+  <path d="M328 298C343 298 354 287 354 272V204H388V272C388 306 362 331 328 331C305 331 286 321 274 304L300 283C306 292 315 298 328 298Z" fill="url(#muzalo-glow)"/>
+  <path d="M135 354C164 334 193 334 222 354C251 374 280 374 309 354C338 334 367 334 396 354" stroke="#F8FAFC" stroke-opacity="0.82" stroke-width="18" stroke-linecap="round"/>
+  <path d="M138 116C163 99 196 91 235 93" stroke="white" stroke-opacity="0.36" stroke-width="13" stroke-linecap="round"/>
+</svg>

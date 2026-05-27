@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Music, UserRound } from 'lucide-react';
+import { UserRound } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { SidebarNav } from './SidebarNav';
 import { SignOutButton } from './auth/SignOutButton';
@@ -19,9 +19,11 @@ export function MusicShell({ children, user }: MusicShellProps) {
       <aside className="w-64 bg-gray-950/50 backdrop-blur-lg border-r border-gray-800 flex flex-col">
         <div className="p-6">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Music className="w-6 h-6 text-white" />
-            </div>
+            <img
+              src="/muzalo-logo.svg"
+              alt=""
+              className="h-10 w-10 rounded-lg transition-transform group-hover:scale-110"
+            />
             <h1 className="text-2xl font-semibold text-white">Muzalo</h1>
           </Link>
         </div>
