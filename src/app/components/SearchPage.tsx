@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { formatArtistUrl, formatSongUrl } from "../data/format";
-import { Search, Music2, User } from "lucide-react";
+import { AlertTriangle, Search, Music2, User } from "lucide-react";
 
 type SearchResults = {
   artists: Array<{ id: string; name: string; genre: string; image: string }>;
@@ -11,6 +11,10 @@ type SearchResults = {
     artist: { id: string; name: string; image: string };
     song: { id: string; title: string; duration: string };
   }>;
+  catalogIssue?: {
+    title: string;
+    description: string;
+  };
 };
 
 export function SearchPage() {
@@ -54,6 +58,20 @@ export function SearchPage() {
 
       {results && !isSearching && (
         <div className="space-y-8">
+          {results.catalogIssue ? (
+            <div className="rounded-2xl border border-amber-400/30 bg-amber-400/10 p-5 text-amber-50">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-300" />
+                <div>
+                  <h3 className="font-semibold">{results.catalogIssue.title}</h3>
+                  <p className="mt-1 text-sm text-amber-100/80">
+                    {results.catalogIssue.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
           {results.artists.length > 0 && (
             <div>
               <h3 className="text-2xl font-semibold text-white mb-4 flex items-center gap-2">

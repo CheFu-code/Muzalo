@@ -68,6 +68,7 @@ type SpotifyTrack = {
 export type SpotifyCatalogIssueCode =
   | "missing_credentials"
   | "credentials_rejected"
+  | "spotify_access_blocked"
   | "artist_not_found"
   | "spotify_api_error"
   | "unknown";
@@ -249,6 +250,15 @@ export function getSpotifyCatalogIssue(error: unknown): SpotifyCatalogIssue {
       };
     }
 
+    if (error.code === "spotify_access_blocked") {
+      return {
+        code: error.code,
+        title: "Spotify Web API access is blocked",
+        description:
+          "Spotify blocked this app from using the Web API. Upgrade the Spotify developer account to Premium, then redeploy Muzalo after access is restored.",
+      };
+    }
+
     return {
       code: error.code,
       title: "Spotify catalog request failed",
@@ -271,9 +281,29 @@ async function getCheFuArtist() {
   const artistName = process.env.SPOTIFY_CHEFU_ARTIST_NAME || "CheFu";
 
   if (artistId) {
-    return spotifyFetch<SpotifyArtist>(`/artists/${artistId}`);
+    try {
+      return await spotifyFetch<SpotifyArtist>(`/artists/${artistId}`);
+    } catch (error) {
+      if (isRecoverableArtistIdError(error)) {
+        console.warn(
+          JSON.stringify({
+            event: "spotify_artist_id_lookup_failed_falling_back_to_search",
+            status: error.status,
+            artistId,
+            artistName,
+          }),
+        );
+        return getCheFuArtistByName(artistName);
+      }
+
+      throw error;
+    }
   }
 
+  return getCheFuArtistByName(artistName);
+}
+
+async function getCheFuArtistByName(artistName: string) {
   const data = await spotifyFetch<{ artists?: { items?: SpotifyArtist[] } }>(
     `/search?${new URLSearchParams({
       q: artistName,
@@ -288,6 +318,14 @@ async function getCheFuArtist() {
     artists.find((artist) => artist.name.toLowerCase() === artistName.toLowerCase()) ||
     artists[0] ||
     null
+  );
+}
+
+function isRecoverableArtistIdError(error: unknown): error is SpotifyCatalogError {
+  return (
+    error instanceof SpotifyCatalogError &&
+    error.code === "spotify_api_error" &&
+    error.status === 404
   );
 }
 
@@ -355,7 +393,7 @@ async function spotifyFetch<T>(path: string): Promise<T> {
       }),
     );
     throw new SpotifyCatalogError(
-      "spotify_api_error",
+      response.status === 403 ? "spotify_access_blocked" : "spotify_api_error",
       `Spotify request failed with status ${response.status}.`,
       response.status,
     );

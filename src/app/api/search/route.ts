@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchMusic } from "../../data/musicData";
+import { getSpotifyCatalogIssue, searchMusic } from "../../data/musicData";
+
+const searchCacheHeaders = {
+  "Cache-Control": "public, s-maxage=300, stale-while-revalidate=1800",
+};
 
 export async function GET(request: NextRequest) {
   const query = request.nextUrl.searchParams.get("q") || "";
@@ -10,19 +14,17 @@ export async function GET(request: NextRequest) {
 
   try {
     const results = await searchMusic(query);
-    return NextResponse.json(results, {
-      headers: {
-        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=1800",
-      },
-    });
+    return NextResponse.json(results, { headers: searchCacheHeaders });
   } catch (error) {
+    const catalogIssue = getSpotifyCatalogIssue(error);
+
     return NextResponse.json(
       {
         artists: [],
         songs: [],
-        error: error instanceof Error ? error.message : "Search failed.",
+        catalogIssue,
       },
-      { status: 502 },
+      { headers: searchCacheHeaders },
     );
   }
 }
