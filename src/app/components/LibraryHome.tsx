@@ -18,14 +18,13 @@ export async function LibraryHome() {
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-purple-200">
                 <Radio className="h-3.5 w-3.5" />
-                Spotify Embed
+                Muzalo
               </div>
               <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white md:text-6xl">
                 {artist.name}
               </h1>
               <p className="mt-4 max-w-xl text-base leading-7 text-gray-300">
-                Stream the official Spotify profile directly inside Muzalo. This version uses
-                Spotify embeds, so it does not depend on Premium-gated Web API access.
+                Stream the official Spotify profile directly inside Muzalo.
               </p>
             </div>
 
@@ -62,9 +61,6 @@ export async function LibraryHome() {
               <Sparkles className="h-6 w-6 text-purple-300" />
               Featured on Spotify
             </h2>
-            <p className="mt-1 text-sm text-gray-400">
-              Add album, playlist, or track IDs in production to feature more embeds.
-            </p>
           </div>
         </div>
 

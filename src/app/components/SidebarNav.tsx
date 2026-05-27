@@ -11,7 +11,7 @@ const navItems = [
   { path: '/playlists', label: 'Playlists', icon: ListMusic },
 ];
 
-export function SidebarNav() {
+export function SidebarNav({ collapsed = false }: { collapsed?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -25,14 +25,15 @@ export function SidebarNav() {
             <Link
               key={path}
               href={path}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+              title={collapsed ? label : undefined}
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-all ${
                 isActive
                   ? 'bg-purple-600 text-white'
                   : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-              }`}
+              } ${collapsed ? 'justify-center px-3' : ''}`}
             >
-              <Icon className="w-5 h-5" />
-              <span className="font-medium">{label}</span>
+              <Icon className="h-5 w-5 shrink-0" />
+              {!collapsed ? <span className="font-medium">{label}</span> : null}
             </Link>
           );
         })}
