@@ -1,7 +1,8 @@
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { Clock, Disc, Play } from 'lucide-react';
-import { formatArtistUrl, formatSongUrl, getArtistByName } from '../data/musicData';
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ExternalLink, Music2, Play } from "lucide-react";
+import { formatArtistUrl, formatSongUrl, getArtistByName } from "../data/musicData";
+import { SpotifyEmbed } from "./SpotifyEmbed";
 
 type ArtistPageProps = {
   artistName: string;
@@ -14,100 +15,96 @@ export async function ArtistPage({ artistName }: ArtistPageProps) {
     notFound();
   }
 
-  const totalDuration = artist.songs.reduce((acc, song) => acc + song.durationMs / 1000, 0);
-
-  const formatTotalTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    if (hours > 0) {
-      return `${hours} hr ${minutes} min`;
-    }
-    return `${minutes} min`;
-  };
-
   return (
     <div className="min-h-screen">
-      <div className="relative h-96 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${artist.image})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 via-gray-900/80 to-gray-900" />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-6 h-full flex flex-col justify-end pb-8">
-          <div className="flex items-end gap-6">
-            <div className="w-52 h-52 rounded-lg overflow-hidden shadow-2xl flex-shrink-0">
-              <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" />
+      <section className="relative overflow-hidden border-b border-white/10 bg-gray-950">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(168,85,247,0.2),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.14),transparent_35%)]" />
+        <div className="relative mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="flex flex-col justify-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-purple-300">Artist</p>
+            <h1 className="mt-4 text-5xl font-semibold tracking-tight text-white md:text-7xl">
+              {artist.name}
+            </h1>
+            <p className="mt-4 max-w-xl text-lg leading-8 text-gray-300">
+              Explore {artist.name} through Spotify embeds hosted inside Muzalo.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-200">
+                {artist.genre}
+              </span>
+              <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-200">
+                {artist.featuredEmbeds.length} embeds
+              </span>
             </div>
-            <div className="pb-2">
-              <p className="text-sm text-purple-400 font-medium mb-2">ARTIST</p>
-              <h1 className="text-6xl font-bold text-white mb-4">{artist.name}</h1>
-              <div className="flex items-center gap-4 text-sm text-gray-300">
-                <span className="flex items-center gap-1.5">
-                  <Disc className="w-4 h-4" />
-                  {artist.genre}
-                </span>
-                <span aria-hidden="true">&bull;</span>
-                <span>{artist.songs.length} songs</span>
-                <span aria-hidden="true">&bull;</span>
-                <span>{formatTotalTime(totalDuration)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="bg-gray-800/40 backdrop-blur-sm rounded-xl border border-gray-700/50 overflow-hidden">
-          <div className="p-6 border-b border-gray-700/50">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <h2 className="text-2xl font-semibold text-white">Spotify Songs</h2>
-              {artist.spotifyUrl ? (
-                <a
-                  href={artist.spotifyUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-purple-500/50 px-4 py-2 text-sm font-semibold text-purple-200 transition hover:bg-purple-500/10"
-                >
-                  Open on Spotify
-                </a>
-              ) : null}
-            </div>
+            <a
+              href={artist.spotifyUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-gray-950 transition hover:bg-purple-100"
+            >
+              Open on Spotify
+              <ExternalLink className="h-4 w-4" />
+            </a>
           </div>
 
-          <div className="divide-y divide-gray-700/50">
-            {artist.songs.map((song, index) => (
-              <Link
-                key={song.id}
-                href={`/${formatArtistUrl(artist.name)}/${formatSongUrl(song.title)}`}
-                className="group flex items-center gap-4 px-6 py-4 hover:bg-gray-700/30 transition-colors"
+          <div className="rounded-3xl border border-white/10 bg-black/30 p-3 shadow-2xl shadow-black/30">
+            <SpotifyEmbed title={`${artist.name} Spotify profile`} src={artist.embedUrl} />
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-7xl space-y-10 px-6 py-12">
+        <section>
+          <h2 className="mb-5 flex items-center gap-2 text-2xl font-semibold text-white">
+            <Music2 className="h-6 w-6 text-purple-300" />
+            Spotify embeds
+          </h2>
+          <div className="grid gap-4 lg:grid-cols-2">
+            {artist.featuredEmbeds.map((embed) => (
+              <article
+                key={embed.id}
+                className="rounded-2xl border border-white/10 bg-gray-800/40 p-3"
               >
-                <span className="text-gray-500 font-medium w-8 text-center group-hover:hidden">
-                  {index + 1}
-                </span>
-                <div className="w-8 items-center justify-center hidden group-hover:flex">
-                  <Play className="w-5 h-5 text-purple-400" fill="currentColor" />
+                <SpotifyEmbed
+                  compact={embed.kind === "track"}
+                  title={embed.title}
+                  src={embed.embedUrl}
+                  kind={embed.kind}
+                />
+                <div className="px-2 pt-3">
+                  <h3 className="font-semibold text-white">{embed.title}</h3>
+                  <p className="text-sm text-gray-400">{embed.description}</p>
                 </div>
-
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-white font-medium mb-1 group-hover:text-purple-400 transition-colors truncate">
-                    {song.title}
-                  </h3>
-                  <p className="text-sm text-gray-400 truncate">{song.album}</p>
-                </div>
-
-                <div className="flex items-center gap-8 text-sm text-gray-400">
-                  <span>{song.year}</span>
-                  <span className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4" />
-                    {song.duration}
-                  </span>
-                </div>
-              </Link>
+              </article>
             ))}
           </div>
-        </div>
+        </section>
+
+        {artist.songs.length ? (
+          <section className="rounded-2xl border border-white/10 bg-gray-800/40">
+            <div className="border-b border-white/10 p-6">
+              <h2 className="text-2xl font-semibold text-white">Track pages</h2>
+            </div>
+            <div className="divide-y divide-white/10">
+              {artist.songs.map((song, index) => (
+                <Link
+                  key={song.id}
+                  href={`/${formatArtistUrl(artist.name)}/${formatSongUrl(song.title)}`}
+                  className="group flex items-center gap-4 px-6 py-4 transition hover:bg-white/5"
+                >
+                  <span className="w-8 text-center font-medium text-gray-500">{index + 1}</span>
+                  <Play className="h-5 w-5 text-purple-300" fill="currentColor" />
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate font-medium text-white group-hover:text-purple-300">
+                      {song.title}
+                    </h3>
+                    <p className="truncate text-sm text-gray-400">{song.album}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
       </div>
     </div>
   );

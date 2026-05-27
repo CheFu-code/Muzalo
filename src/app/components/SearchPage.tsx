@@ -4,12 +4,21 @@ import { useState } from "react";
 import Link from "next/link";
 import { formatArtistUrl, formatSongUrl } from "../data/format";
 import { AlertTriangle, Search, Music2, User } from "lucide-react";
+import { SpotifyEmbed } from "./SpotifyEmbed";
 
 type SearchResults = {
   artists: Array<{ id: string; name: string; genre: string; image: string }>;
   songs: Array<{
     artist: { id: string; name: string; image: string };
     song: { id: string; title: string; duration: string };
+  }>;
+  embeds?: Array<{
+    id: string;
+    kind: "artist" | "album" | "playlist" | "track";
+    title: string;
+    subtitle: string;
+    embedUrl: string;
+    spotifyUrl: string;
   }>;
   catalogIssue?: {
     title: string;
@@ -53,7 +62,7 @@ export function SearchPage() {
       </div>
 
       {isSearching ? (
-        <p className="text-gray-400">Searching Spotify...</p>
+        <p className="text-gray-400">Searching Muzalo...</p>
       ) : null}
 
       {results && !isSearching && (
@@ -102,6 +111,34 @@ export function SearchPage() {
             </div>
           )}
 
+          {results.embeds && results.embeds.length > 0 && (
+            <div>
+              <h3 className="text-2xl font-semibold text-white mb-4 flex items-center gap-2">
+                <Music2 className="w-6 h-6" />
+                Spotify Embeds
+              </h3>
+              <div className="grid gap-4 lg:grid-cols-2">
+                {results.embeds.map((embed) => (
+                  <div
+                    key={embed.id}
+                    className="rounded-2xl border border-white/10 bg-gray-800/40 p-3"
+                  >
+                    <SpotifyEmbed
+                      compact={embed.kind === "track"}
+                      title={embed.title}
+                      src={embed.embedUrl}
+                      kind={embed.kind}
+                    />
+                    <div className="px-2 pt-3">
+                      <h4 className="font-semibold text-white">{embed.title}</h4>
+                      <p className="text-sm text-gray-400">{embed.subtitle}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {results.songs.length > 0 && (
             <div>
               <h3 className="text-2xl font-semibold text-white mb-4 flex items-center gap-2">
@@ -131,7 +168,9 @@ export function SearchPage() {
             </div>
           )}
 
-          {results.artists.length === 0 && results.songs.length === 0 && (
+          {results.artists.length === 0 &&
+            results.songs.length === 0 &&
+            (!results.embeds || results.embeds.length === 0) && (
             <div className="text-center py-12">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-800/50 rounded-full mb-4">
                 <Search className="w-10 h-10 text-gray-600" />
