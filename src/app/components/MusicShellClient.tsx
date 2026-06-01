@@ -1,6 +1,6 @@
 'use client';
 
-import { CheFuUserDropdown } from '@chefu/ui';
+import { CheFuUserDropdown } from 'chefu-ui';
 import Link from 'next/link';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { signOut } from 'firebase/auth';

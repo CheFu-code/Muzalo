@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@chefu/ui": "https://codeload.github.com/CheFu-code/CheFu-UI/tar.gz/refs/heads/main",
+    "chefu-ui": "^0.1.0",
     "firebase": "^12.13.0",
     "lucide-react": "0.487.0",
     "next": "16.2.6",
