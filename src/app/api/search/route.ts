@@ -1,11 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchMusic } from "../../data/musicData";
+import { checkRateLimit } from "../../../lib/rate-limit";
 
 const searchCacheHeaders = {
   "Cache-Control": "public, s-maxage=300, stale-while-revalidate=1800",
 };
 
 export async function GET(request: NextRequest) {
+  const rateLimit = checkRateLimit(request, {
+    keyPrefix: "muzalo-search",
+    limit: 120,
+    windowMs: 60_000,
+  });
+
+  if (rateLimit.limited) {
+    return NextResponse.json(
+      { error: "Too many search requests. Please wait a moment and try again." },
+      { headers: rateLimit.headers, status: 429 },
+    );
+  }
+
   const query = request.nextUrl.searchParams.get("q") || "";
 
   if (!query.trim()) {
