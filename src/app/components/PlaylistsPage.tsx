@@ -9,13 +9,10 @@ export async function PlaylistsPage() {
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12">
       <div className="mb-8 sm:mb-10">
         <p className="text-sm font-semibold uppercase tracking-[0.25em] text-purple-300">
-          Spotify embeds
+          Muzalo
         </p>
         <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Collections</h2>
-        <p className="mt-3 max-w-2xl text-sm text-gray-400 sm:text-base">
-          Artist, album, and playlist embeds load directly from Spotify without calling the Premium
-          gated Web API.
-        </p>
+
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
