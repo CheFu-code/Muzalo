@@ -21,13 +21,13 @@ export async function GenresPage() {
   const genres = await getAllGenres().catch(() => []);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
-      <div className="mb-12">
-        <h2 className="text-4xl font-semibold text-white mb-3">Browse by Genre</h2>
-        <p className="text-gray-400">Explore music by your favorite genres</p>
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12">
+      <div className="mb-8 sm:mb-12">
+        <h2 className="mb-3 text-3xl font-semibold text-white sm:text-4xl">Browse by Genre</h2>
+        <p className="text-sm text-gray-400 sm:text-base">Explore music by your favorite genres</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
         {await Promise.all(genres.map(async (genre) => {
           const artists = await getArtistsByGenre(genre);
           const gradient = genreColors[genre] || "from-gray-600 to-gray-700";
@@ -35,15 +35,15 @@ export async function GenresPage() {
           return (
             <div
               key={genre}
-              className="group bg-gray-800/40 rounded-xl overflow-hidden hover:bg-gray-800/60 transition-all border border-gray-700/50 hover:border-purple-500/50"
+              className="group overflow-hidden rounded-xl border border-gray-700/50 bg-gray-800/40 transition-all hover:border-purple-500/50 hover:bg-gray-800/60"
             >
-              <div className={`h-32 bg-gradient-to-br ${gradient} relative`}>
+              <div className={`relative h-24 bg-gradient-to-br sm:h-32 ${gradient}`}>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Music className="w-16 h-16 text-white/30" />
+                  <Music className="h-12 w-12 text-white/30 sm:h-16 sm:w-16" />
                 </div>
               </div>
-              <div className="p-4">
-                <h3 className="text-xl font-semibold text-white mb-3">{genre}</h3>
+              <div className="p-3 sm:p-4">
+                <h3 className="mb-3 text-lg font-semibold text-white sm:text-xl">{genre}</h3>
                 <div className="space-y-2">
                   {artists.slice(0, 3).map((artist) => (
                     <Link

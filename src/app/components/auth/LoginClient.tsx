@@ -124,7 +124,7 @@ export function LoginClient() {
     checkingSession || emailPending || googlePending || resetPending;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 px-6 py-10 text-white">
+    <main className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 px-4 py-6 text-white sm:px-6 sm:py-10">
       <section className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-6xl items-center justify-center gap-12">
         <div className="hidden max-w-xl lg:block">
           <div className="mb-6 flex items-center gap-3">
@@ -142,9 +142,9 @@ export function LoginClient() {
           </p>
         </div>
 
-        <div className="w-full max-w-md rounded-xl border border-gray-700/70 bg-gray-900/80 p-6 shadow-2xl shadow-black/30 backdrop-blur">
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold">Welcome back</h2>
+        <div className="w-full max-w-md rounded-xl border border-gray-700/70 bg-gray-900/80 p-5 shadow-2xl shadow-black/30 backdrop-blur sm:p-6">
+          <div className="mb-5 sm:mb-6">
+            <h2 className="text-xl font-semibold sm:text-2xl">Welcome back</h2>
             <p className="mt-2 text-sm text-gray-400">
               Continue to Muzalo with your CheFu account.
             </p>
@@ -175,7 +175,7 @@ export function LoginClient() {
             type="button"
             onClick={handleGoogleSignIn}
             disabled={anyPending}
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gray-700 px-4 py-3 font-medium text-gray-100 transition-colors hover:border-purple-500 hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gray-700 px-4 py-2.5 text-sm font-medium text-gray-100 transition-colors hover:border-purple-500 hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60 sm:py-3 sm:text-base"
           >
             {googlePending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
             Continue with Google
@@ -208,7 +208,7 @@ export function LoginClient() {
                 onChange={event => setEmail(event.currentTarget.value)}
                 autoComplete="email"
                 placeholder="you@example.com"
-                className="w-full rounded-lg border border-gray-700 bg-gray-950/70 px-4 py-3 text-white placeholder:text-gray-500 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-700 bg-gray-950/70 px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:border-purple-500 focus:outline-none sm:py-3 sm:text-base"
               />
             </div>
 
@@ -236,14 +236,14 @@ export function LoginClient() {
                 onChange={event => setPassword(event.currentTarget.value)}
                 autoComplete="current-password"
                 placeholder="Enter your password"
-                className="w-full rounded-lg border border-gray-700 bg-gray-950/70 px-4 py-3 text-white placeholder:text-gray-500 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-700 bg-gray-950/70 px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:border-purple-500 focus:outline-none sm:py-3 sm:text-base"
               />
             </div>
 
             <button
               type="submit"
               disabled={anyPending || !email.trim() || !password}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-3 font-medium text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-60 sm:py-3 sm:text-base"
             >
               {emailPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               Sign in

@@ -11,19 +11,19 @@ export async function LibraryHome() {
   const collectionEmbeds = featuredEmbeds.filter((item) => item.kind !== "track");
 
   return (
-    <div className="mx-auto max-w-7xl space-y-12 px-6 py-10">
-      <section className="overflow-hidden rounded-3xl border border-white/10 bg-gray-900/80 shadow-2xl shadow-black/30">
-        <div className="grid gap-8 p-6 lg:grid-cols-[0.9fr_1.1fr] lg:p-8">
-          <div className="flex flex-col justify-between gap-8">
+    <div className="mx-auto max-w-7xl space-y-8 px-4 py-6 sm:space-y-12 sm:px-6 sm:py-10">
+      <section className="overflow-hidden rounded-2xl border border-white/10 bg-gray-900/80 shadow-2xl shadow-black/30 sm:rounded-3xl">
+        <div className="grid gap-6 p-4 sm:gap-8 sm:p-6 lg:grid-cols-[0.9fr_1.1fr] lg:p-8">
+          <div className="flex flex-col justify-between gap-6 sm:gap-8">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-purple-200">
                 <Radio className="h-3.5 w-3.5" />
                 Muzalo
               </div>
-              <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white md:text-6xl">
+              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:mt-5 sm:text-4xl md:text-6xl">
                 {artist.name}
               </h1>
-              <p className="mt-4 max-w-xl text-base leading-7 text-gray-300">
+              <p className="mt-3 max-w-xl text-sm leading-6 text-gray-300 sm:mt-4 sm:text-base sm:leading-7">
                 Stream the official Spotify profile directly inside Muzalo.
               </p>
             </div>
@@ -33,14 +33,14 @@ export async function LibraryHome() {
                 href={artist.spotifyUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-gray-950 transition hover:bg-purple-100"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-semibold text-gray-950 transition hover:bg-purple-100 sm:px-5 sm:py-3 sm:text-sm"
               >
                 Open on Spotify
                 <ExternalLink className="h-4 w-4" />
               </a>
               <Link
                 href="/search"
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-white/10 sm:px-5 sm:py-3 sm:text-sm"
               >
                 Search Muzalo
                 <Search className="h-4 w-4" />
@@ -57,8 +57,8 @@ export async function LibraryHome() {
       <section>
         <div className="mb-5 flex items-center justify-between">
           <div>
-            <h2 className="flex items-center gap-2 text-2xl font-semibold text-white">
-              <Sparkles className="h-6 w-6 text-purple-300" />
+            <h2 className="flex items-center gap-2 text-xl font-semibold text-white sm:text-2xl">
+              <Sparkles className="h-5 w-5 text-purple-300 sm:h-6 sm:w-6" />
               Featured on Spotify
             </h2>
           </div>
@@ -93,8 +93,8 @@ export async function LibraryHome() {
       <section>
         <div className="mb-5 flex items-center justify-between">
           <div>
-            <h2 className="flex items-center gap-2 text-2xl font-semibold text-white">
-              <Music2 className="h-6 w-6 text-purple-300" />
+            <h2 className="flex items-center gap-2 text-xl font-semibold text-white sm:text-2xl">
+              <Music2 className="h-5 w-5 text-purple-300 sm:h-6 sm:w-6" />
               Featured Tracks
             </h2>
             <p className="mt-1 text-sm text-gray-400">
@@ -112,7 +112,7 @@ export async function LibraryHome() {
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-white/15 bg-gray-800/30 p-8 text-center">
+          <div className="rounded-2xl border border-dashed border-white/15 bg-gray-800/30 p-5 text-center sm:p-8">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-purple-400/10 text-purple-200">
               <Play className="h-5 w-5" fill="currentColor" />
             </div>
@@ -127,13 +127,13 @@ export async function LibraryHome() {
 
       {artist.songs.length ? (
         <section>
-          <h2 className="mb-5 text-2xl font-semibold text-white">Track Pages</h2>
+          <h2 className="mb-5 text-xl font-semibold text-white sm:text-2xl">Track Pages</h2>
           <div className="grid gap-3">
             {artist.songs.map((song) => (
               <Link
                 key={song.id}
                 href={`/${formatArtistUrl(artist.name)}/${formatSongUrl(song.title)}`}
-                className="flex items-center justify-between rounded-2xl border border-white/10 bg-gray-800/40 px-5 py-4 transition hover:bg-gray-800/70"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-gray-800/40 px-4 py-3 text-sm transition hover:bg-gray-800/70 sm:px-5 sm:py-4 sm:text-base"
               >
                 <span className="font-medium text-white">{song.title}</span>
                 <span className="text-sm text-gray-400">{song.album}</span>

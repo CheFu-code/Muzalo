@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { useState, type ReactNode } from 'react';
+import { ArtistProfileRequest } from './ArtistProfileRequest';
 import { SidebarNav } from './SidebarNav';
 import type { AuthUser } from '@/lib/server-session';
 import { apiUrl } from '@/lib/api';
@@ -58,7 +59,7 @@ export function MusicShellClient({ children, manageAccountUrl, user }: MusicShel
               alt=""
               className="h-10 w-10 shrink-0 rounded-lg transition-transform group-hover:scale-110"
             />
-            {!collapsed ? <h1 className="truncate text-2xl font-semibold text-white">Muzalo</h1> : null}
+          {!collapsed ? <h1 className="truncate text-xl font-semibold text-white sm:text-2xl">Muzalo</h1> : null}
           </Link>
           {!collapsed ? (
             <button
@@ -87,7 +88,9 @@ export function MusicShellClient({ children, manageAccountUrl, user }: MusicShel
 
         <SidebarNav collapsed={collapsed} />
 
-        <div className={`border-t border-gray-800 p-4 ${collapsed ? 'space-y-3' : 'space-y-4'}`}>
+        <div className={`border-t border-gray-800 p-3 sm:p-4 ${collapsed ? 'space-y-3' : 'space-y-4'}`}>
+          <ArtistProfileRequest collapsed={collapsed} roles={user.roles} />
+
           {collapsed ? (
             <button
               type="button"

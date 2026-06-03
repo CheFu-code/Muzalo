@@ -45,9 +45,9 @@ export function SearchPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
-      <div className="mb-12">
-        <h2 className="text-4xl font-semibold text-white mb-6">Search</h2>
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12">
+      <div className="mb-8 sm:mb-12">
+        <h2 className="mb-4 text-3xl font-semibold text-white sm:mb-6 sm:text-4xl">Search</h2>
         <div className="relative max-w-2xl">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
@@ -55,7 +55,7 @@ export function SearchPage() {
             placeholder="Search for artists, songs, or albums..."
             value={query}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 bg-gray-800/60 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors"
+            className="w-full rounded-lg border border-gray-700 bg-gray-800/60 py-3 pl-11 pr-4 text-sm text-white placeholder-gray-400 transition-colors focus:border-purple-500 focus:outline-none sm:py-4 sm:pl-12 sm:text-base"
             autoFocus
           />
         </div>
@@ -83,16 +83,16 @@ export function SearchPage() {
 
           {results.artists.length > 0 && (
             <div>
-              <h3 className="text-2xl font-semibold text-white mb-4 flex items-center gap-2">
-                <User className="w-6 h-6" />
+              <h3 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white sm:text-2xl">
+                <User className="h-5 w-5 sm:h-6 sm:w-6" />
                 Artists
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
                 {results.artists.map((artist) => (
                   <Link
                     key={artist.id}
                     href={`/${formatArtistUrl(artist.name)}`}
-                    className="group bg-gray-800/40 rounded-lg p-4 hover:bg-gray-800/60 transition-all"
+                    className="group rounded-lg bg-gray-800/40 p-3 transition-all hover:bg-gray-800/60 sm:p-4"
                   >
                     <div className="aspect-square rounded-lg overflow-hidden mb-3">
                       <img
@@ -113,8 +113,8 @@ export function SearchPage() {
 
           {results.embeds && results.embeds.length > 0 && (
             <div>
-              <h3 className="text-2xl font-semibold text-white mb-4 flex items-center gap-2">
-                <Music2 className="w-6 h-6" />
+              <h3 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white sm:text-2xl">
+                <Music2 className="h-5 w-5 sm:h-6 sm:w-6" />
                 Spotify Embeds
               </h3>
               <div className="grid gap-4 lg:grid-cols-2">
@@ -141,8 +141,8 @@ export function SearchPage() {
 
           {results.songs.length > 0 && (
             <div>
-              <h3 className="text-2xl font-semibold text-white mb-4 flex items-center gap-2">
-                <Music2 className="w-6 h-6" />
+              <h3 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white sm:text-2xl">
+                <Music2 className="h-5 w-5 sm:h-6 sm:w-6" />
                 Songs
               </h3>
               <div className="bg-gray-800/40 rounded-xl border border-gray-700/50 overflow-hidden">
@@ -150,9 +150,9 @@ export function SearchPage() {
                   <Link
                     key={`${artist.id}-${song.id}`}
                     href={`/${formatArtistUrl(artist.name)}/${formatSongUrl(song.title)}`}
-                    className="flex items-center gap-4 px-6 py-4 hover:bg-gray-700/30 transition-colors border-b border-gray-700/50 last:border-b-0"
+                    className="flex items-center gap-3 border-b border-gray-700/50 px-4 py-3 text-sm transition-colors last:border-b-0 hover:bg-gray-700/30 sm:gap-4 sm:px-6 sm:py-4 sm:text-base"
                   >
-                    <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0">
+                    <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded sm:h-12 sm:w-12">
                       <img src={artist.image} alt={artist.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -171,7 +171,7 @@ export function SearchPage() {
           {results.artists.length === 0 &&
             results.songs.length === 0 &&
             (!results.embeds || results.embeds.length === 0) && (
-            <div className="text-center py-12">
+            <div className="py-8 text-center sm:py-12">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-800/50 rounded-full mb-4">
                 <Search className="w-10 h-10 text-gray-600" />
               </div>
@@ -183,7 +183,7 @@ export function SearchPage() {
       )}
 
       {!results && (
-        <div className="text-center py-12">
+        <div className="py-8 text-center sm:py-12">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-800/50 rounded-full mb-4">
             <Search className="w-10 h-10 text-gray-600" />
           </div>

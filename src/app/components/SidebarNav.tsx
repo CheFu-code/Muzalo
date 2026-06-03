@@ -26,7 +26,7 @@ export function SidebarNav({ collapsed = false }: { collapsed?: boolean }) {
               key={path}
               href={path}
               title={collapsed ? label : undefined}
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-all ${
+              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all sm:px-4 sm:py-3 sm:text-base ${
                 isActive
                   ? 'bg-purple-600 text-white'
                   : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
