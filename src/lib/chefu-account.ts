@@ -23,6 +23,7 @@ export function buildChefuAccountLoginUrl({
 
 export function buildChefuAccountLogoutUrl(returnTo: string) {
   const url = new URL('/logout', CHEFU_ACCOUNT_URL);
+  url.searchParams.set('app', 'muzalo');
   url.searchParams.set('returnTo', returnTo);
   return url.toString();
 }
