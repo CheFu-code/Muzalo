@@ -7,7 +7,7 @@ const searchCacheHeaders = {
 };
 
 export async function GET(request: NextRequest) {
-  const rateLimit = checkRateLimit(request, {
+  const rateLimit = await checkRateLimit(request, {
     keyPrefix: "muzalo-search",
     limit: 120,
     windowMs: 60_000,
