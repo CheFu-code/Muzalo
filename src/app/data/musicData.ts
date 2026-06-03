@@ -1,4 +1,5 @@
 import { formatArtistUrl, formatRouteValue, formatSongUrl } from "./format";
+import { apiUrl, MUSIC_APP_HEADER } from "@/lib/api";
 
 export type SpotifyEmbedKind = "artist" | "album" | "playlist" | "track";
 
@@ -57,6 +58,14 @@ const FALLBACK_ARTIST_ID = "07fFH9mxSS0g69Wbz8PXNn";
 const FALLBACK_ARTIST_NAME = "CheFu";
 const MUZALO_LOGO = "/muzalo-logo.svg";
 
+type MuzaloCatalogArtist = {
+  artistName?: string;
+  primaryGenre?: string;
+  spotifyArtistId?: string;
+  spotifyUrl?: string;
+  websiteUrl?: string;
+};
+
 export function spotifyEmbedUrl(kind: SpotifyEmbedKind, spotifyId: string) {
   return `https://open.spotify.com/embed/${kind}/${spotifyId}?utm_source=generator`;
 }
@@ -84,21 +93,25 @@ export async function getMusicLibrary(): Promise<Artist[]> {
     image: artistImage,
   };
 
-  return [
-    {
-      id: artistId,
-      name: artistName,
-      genre: artistGenre,
-      image: artistImage,
-      spotifyId: artistId,
-      spotifyUrl: spotifyOpenUrl("artist", artistId),
-      embedUrl: spotifyEmbedUrl("artist", artistId),
-      followers: 0,
-      popularity: 0,
-      songs: tracks,
-      featuredEmbeds: [artistEmbed, ...configuredEmbeds],
-    },
-  ];
+  const defaultArtist: Artist = {
+    id: artistId,
+    name: artistName,
+    genre: artistGenre,
+    image: artistImage,
+    spotifyId: artistId,
+    spotifyUrl: spotifyOpenUrl("artist", artistId),
+    embedUrl: spotifyEmbedUrl("artist", artistId),
+    followers: 0,
+    popularity: 0,
+    songs: tracks,
+    featuredEmbeds: [artistEmbed, ...configuredEmbeds],
+  };
+  const catalogArtists = await getApprovedCatalogArtists();
+  const approvedArtists = catalogArtists
+    .filter((artist) => artist.spotifyArtistId)
+    .map((artist) => catalogArtistToLibraryArtist(artist));
+
+  return dedupeArtists([defaultArtist, ...approvedArtists]);
 }
 
 export async function getFeaturedEmbeds() {
@@ -108,20 +121,22 @@ export async function getFeaturedEmbeds() {
 
 export async function getPlaylists(): Promise<Playlist[]> {
   const library = await getMusicLibrary();
-  const artist = library[0];
-  const embeds = artist.featuredEmbeds.filter((item) => item.kind !== "track");
 
-  return embeds.map((item) => ({
-    id: item.id,
-    name: item.title,
-    description: item.description,
-    image: item.image,
-    spotifyId: item.spotifyId,
-    spotifyUrl: item.spotifyUrl,
-    embedUrl: item.embedUrl,
-    kind: item.kind,
-    songIds: artist.songs.slice(0, 8).map((song) => song.id),
-  }));
+  return library.flatMap((artist) =>
+    artist.featuredEmbeds
+      .filter((item) => item.kind !== "track")
+      .map((item) => ({
+        id: item.id,
+        name: item.title,
+        description: item.description,
+        image: item.image,
+        spotifyId: item.spotifyId,
+        spotifyUrl: item.spotifyUrl,
+        embedUrl: item.embedUrl,
+        kind: item.kind,
+        songIds: artist.songs.slice(0, 8).map((song) => song.id),
+      })),
+  );
 }
 
 export async function getArtistByName(name: string): Promise<Artist | undefined> {
@@ -237,6 +252,67 @@ function getConfiguredTracks(artistName: string, fallbackImage: string): Song[] 
     spotifyUrl: spotifyOpenUrl("track", spotifyId),
     embedUrl: spotifyEmbedUrl("track", spotifyId),
   }));
+}
+
+async function getApprovedCatalogArtists(): Promise<MuzaloCatalogArtist[]> {
+  try {
+    const response = await fetch(apiUrl("/muzalo/catalog"), {
+      cache: "no-store",
+      headers: MUSIC_APP_HEADER,
+    });
+
+    if (!response.ok) return [];
+
+    const data = (await response.json().catch(() => ({}))) as {
+      artists?: MuzaloCatalogArtist[];
+    };
+
+    return Array.isArray(data.artists) ? data.artists : [];
+  } catch {
+    return [];
+  }
+}
+
+function catalogArtistToLibraryArtist(artist: MuzaloCatalogArtist): Artist {
+  const artistId = String(artist.spotifyArtistId || "").trim();
+  const artistName = String(artist.artistName || "Muzalo Artist").trim();
+  const artistGenre = String(artist.primaryGenre || "Muzalo Artist").trim();
+  const artistEmbed: SpotifyEmbedItem = {
+    id: `artist-${artistId}`,
+    kind: "artist",
+    title: `${artistName} on Spotify`,
+    subtitle: "Artist profile",
+    description: "Stream releases, top songs, and artist radio directly from Spotify.",
+    spotifyId: artistId,
+    spotifyUrl: spotifyOpenUrl("artist", artistId),
+    embedUrl: spotifyEmbedUrl("artist", artistId),
+    image: MUZALO_LOGO,
+  };
+
+  return {
+    id: artistId,
+    name: artistName,
+    genre: artistGenre,
+    image: MUZALO_LOGO,
+    spotifyId: artistId,
+    spotifyUrl: artist.spotifyUrl || spotifyOpenUrl("artist", artistId),
+    embedUrl: spotifyEmbedUrl("artist", artistId),
+    followers: 0,
+    popularity: 0,
+    songs: [],
+    featuredEmbeds: [artistEmbed],
+  };
+}
+
+function dedupeArtists(artists: Artist[]) {
+  const seen = new Set<string>();
+
+  return artists.filter((artist) => {
+    const key = artist.spotifyId || artist.id;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function getEmbedItemsFromEnv(

@@ -101,6 +101,11 @@ export function ArtistProfileRequestForm({
       return;
     }
 
+    if (!fields.spotifyUrl.trim()) {
+      setError('Enter your Spotify artist link.');
+      return;
+    }
+
     setSaving(true);
 
     try {
@@ -229,6 +234,7 @@ export function ArtistProfileRequestForm({
                   onChange={updateField('spotifyUrl')}
                   className="rounded-2xl border border-white/10 bg-gray-950/80 px-4 py-2.5 text-sm font-normal text-white outline-none transition placeholder:text-gray-600 focus:border-purple-300 sm:py-3"
                   placeholder="https://open.spotify.com/artist/..."
+                  required
                   disabled={!canEdit || saving}
                 />
               </label>

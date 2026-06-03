@@ -8,6 +8,7 @@ export type ArtistProfile = {
   requestId?: string;
   reviewedAt?: string | null;
   reviewedBy?: string;
+  spotifyArtistId?: string;
   spotifyUrl?: string;
   status: ArtistProfileStatus;
   updatedAt?: string | null;
