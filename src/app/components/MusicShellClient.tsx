@@ -59,7 +59,11 @@ export function MusicShellClient({ children, manageAccountUrl, user }: MusicShel
               alt=""
               className="h-10 w-10 shrink-0 rounded-lg transition-transform group-hover:scale-110"
             />
-          {!collapsed ? <h1 className="truncate text-xl font-semibold text-white sm:text-2xl">Muzalo</h1> : null}
+            {!collapsed ? (
+              <h1 className="truncate text-xl font-semibold text-white sm:text-2xl">
+                Muzalo
+              </h1>
+            ) : null}
           </Link>
           {!collapsed ? (
             <button
