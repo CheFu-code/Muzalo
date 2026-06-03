@@ -26,7 +26,7 @@ export function MusicShellClient({ children, manageAccountUrl, user }: MusicShel
     setPendingSignOut(true);
 
     try {
-      await fetch(apiUrl('/auth/session'), {
+      await fetch(apiUrl('/auth/session?global=true'), {
         method: 'DELETE',
         credentials: 'include',
       });

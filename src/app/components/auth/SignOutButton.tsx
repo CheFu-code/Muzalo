@@ -14,7 +14,7 @@ export function SignOutButton() {
     setPending(true);
 
     try {
-      await fetch(apiUrl('/auth/session'), {
+      await fetch(apiUrl('/auth/session?global=true'), {
         method: 'DELETE',
         credentials: 'include',
       });

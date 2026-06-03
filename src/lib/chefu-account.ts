@@ -1,6 +1,13 @@
 const CHEFU_ACCOUNT_URL =
   process.env.NEXT_PUBLIC_CHEFU_ACCOUNT_URL || 'https://myaccount.chefuinc.com';
 
+const DEFAULT_MUZALO_ORIGINS = [
+  'https://muzalo.chefuinc.com',
+  'https://music.chefuinc.com',
+  'http://localhost:3002',
+  'http://127.0.0.1:3002',
+];
+
 export function buildChefuAccountLoginUrl({
   app,
   returnTo,
@@ -39,10 +46,47 @@ export async function currentRequestOrigin() {
     (host.startsWith('localhost') || host.startsWith('127.0.0.1')
       ? 'http'
       : 'https');
+  const candidate = normalizeOrigin(`${protocol}://${host}`);
 
-  return `${protocol}://${host}`;
+  if (candidate && allowedMuzaloOrigins().has(candidate)) {
+    return candidate;
+  }
+
+  return DEFAULT_MUZALO_ORIGINS[0];
 }
 
 export function safeNextPath(value?: string) {
-  return value?.startsWith('/') && !value.startsWith('//') ? value : '/';
+  return value?.startsWith('/') &&
+    !value.startsWith('//') &&
+    !value.startsWith('/\\') &&
+    !hasUnsafePathCharacters(value)
+    ? value
+    : '/';
+}
+
+function hasUnsafePathCharacters(value: string) {
+  return Array.from(value).some(
+    character => character === '\\' || character.charCodeAt(0) < 0x20,
+  );
+}
+
+function allowedMuzaloOrigins() {
+  const configuredOrigins =
+    process.env.NEXT_PUBLIC_ALLOWED_MUZALO_ORIGINS?.split(',') || [];
+
+  return new Set(
+    [...DEFAULT_MUZALO_ORIGINS, ...configuredOrigins]
+      .map(origin => normalizeOrigin(origin))
+      .filter((origin): origin is string => Boolean(origin)),
+  );
+}
+
+function normalizeOrigin(value?: string) {
+  if (!value) return null;
+
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
 }
